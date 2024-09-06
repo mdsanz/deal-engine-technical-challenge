@@ -1,4 +1,5 @@
 export const getFlightsQuery = `SELECT 
+    t.id,  -- Añadir la columna id aquí
     t.origin, 
     t.destination, 
     t.marketing_airline_code as airline, 
@@ -16,10 +17,11 @@ FROM
 JOIN 
     (
         SELECT 
-            f.origin, 
-            f.destination, 
-            f.marketing_airline_code, 
-            f.flight_num,
+            c.id,  -- Añadir la columna id aquí
+            c.origin, 
+            c.destination, 
+            c.marketing_airline_code, 
+            c.flight_num,
             a.latitude as origin_latitude,
             a.longitude as origin_longitude,
             a.name as origin_name,
@@ -29,6 +31,7 @@ JOIN
         JOIN 
             (
                 SELECT 
+                    coupon.id,  -- Añadir la columna id aquí
                     coupon.origin, 
                     coupon.destination, 
                     coupon.marketing_airline_code, 
@@ -39,9 +42,9 @@ JOIN
                     coupon.origin IN (SELECT iata_code FROM airport WHERE country LIKE 'Mexico')
                     AND coupon.flight_num IS NOT NULL
                 LIMIT 3000
-            ) f
+            ) c
         ON 
-            f.origin = a.iata_code
+            c.origin = a.iata_code
     ) t 
 ON 
     t.destination = i.iata_code
